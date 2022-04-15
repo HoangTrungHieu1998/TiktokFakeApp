@@ -36,8 +36,12 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   final _refreshController = RefreshController(initialRefresh: false);
   final loginName = TextEditingController();
   final loginPass = TextEditingController();
+  final user = TextEditingController();
+  final desc = TextEditingController();
   String name="";
   String pass="";
+  String userName="";
+  String description="";
   Profile? profile;
 
   late TabController _tabController;
@@ -112,6 +116,16 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
             widget.bloc!.add(LoadProfile(id: state.id));
           }
           if (state is ProfileSignUpFailed) {
+            Navigator.pop(context);
+            MyDialog.instance.dialogOK(context, state.error!, "Login Failed");
+          }
+          if (state is ProfileEditLoading) {
+            // dialogProgressDialog(context, Language().updating, "");
+          }
+          if (state is ProfileEditSuccess) {
+            widget.bloc!.add(LoadProfile(id: state.id));
+          }
+          if (state is ProfileEditFailed) {
             Navigator.pop(context);
             MyDialog.instance.dialogOK(context, state.error!, "Login Failed");
 
@@ -247,6 +261,69 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                                     child: const Text("Sign up"),
                                     onPressed: () {
                                       Navigator.of(context).pop();
+                                      showCupertinoDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CupertinoAlertDialog(
+                                            title: const Text("Please enter your username and password to sign up"),
+                                            content: Card(
+                                              child: Column(
+                                                children: <Widget>[
+                                                  TextField(
+                                                    onChanged: (text){
+                                                      name = text;
+                                                    },
+                                                    controller: loginName,
+                                                    decoration: const InputDecoration(
+                                                      icon: Icon(Icons.account_circle),
+                                                      labelText: 'Username',
+                                                    ),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (text){
+                                                      pass = text;
+                                                    },
+                                                    controller: loginPass,
+                                                    obscureText: true,
+                                                    decoration: const InputDecoration(
+                                                      icon: Icon(Icons.lock),
+                                                      labelText: 'Password',
+                                                    ),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (text){
+                                                      userName = text;
+                                                    },
+                                                    controller: user,
+                                                    decoration: const InputDecoration(
+                                                      icon: Icon(Icons.home),
+                                                      labelText: 'Your Name',
+                                                    ),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (text){
+                                                      description = text;
+                                                    },
+                                                    controller: desc,
+                                                    decoration: const InputDecoration(
+                                                      icon: Icon(Icons.waves),
+                                                      labelText: 'Description',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: [
+                                              CupertinoDialogAction(
+                                                  child: const Text("Sign Up"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    widget.bloc!.add(SignUpProfile(name, pass, userName, description));
+                                                  }),
+                                            ],
+                                          );
+                                        },
+                                      );
                                     }),
                               ],
                             );
@@ -377,7 +454,52 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     style: ElevatedButton.styleFrom(
                       primary: ConstColor.white,
                     ),
-                    onPressed: (){},
+                    onPressed: (){
+                      name = profile!.loginName!;
+                      userName = profile!.name!;
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return CupertinoAlertDialog(
+                            title: const Text("Please enter value to update your profile"),
+                            content: Card(
+                              child: Column(
+                                children: <Widget>[
+                                  TextField(
+                                    onChanged: (text){
+                                      name = text;
+                                    },
+                                    controller: loginName,
+                                    decoration: const InputDecoration(
+                                      icon: Icon(Icons.account_circle),
+                                      labelText: 'Username',
+                                    ),
+                                  ),
+                                  TextField(
+                                    onChanged: (text){
+                                      userName = text;
+                                    },
+                                    controller: user,
+                                    decoration: const InputDecoration(
+                                      icon: Icon(Icons.remove_red_eye),
+                                      labelText: 'Your Name',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              CupertinoDialogAction(
+                                  child: const Text("Update"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    widget.bloc!.add(EditProfile(profile!.id, name, userName));
+                                  }),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     child: Text("Sửa hồ sơ",style: TextStyle(color: Colors.black.withOpacity(0.7)),),
                   ),
                 ),
@@ -520,6 +642,69 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                                   child: const Text("Sign up"),
                                   onPressed: () {
                                     Navigator.of(context).pop();
+                                    showCupertinoDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CupertinoAlertDialog(
+                                          title: const Text("Please enter your username and password to sign up"),
+                                          content: Card(
+                                            child: Column(
+                                              children: <Widget>[
+                                                TextField(
+                                                  onChanged: (text){
+                                                    name = text;
+                                                  },
+                                                  controller: loginName,
+                                                  decoration: const InputDecoration(
+                                                    icon: Icon(Icons.account_circle),
+                                                    labelText: 'Username',
+                                                  ),
+                                                ),
+                                                TextField(
+                                                  onChanged: (text){
+                                                    pass = text;
+                                                  },
+                                                  controller: loginPass,
+                                                  obscureText: true,
+                                                  decoration: const InputDecoration(
+                                                    icon: Icon(Icons.lock),
+                                                    labelText: 'Password',
+                                                  ),
+                                                ),
+                                                TextField(
+                                                  onChanged: (text){
+                                                    userName = text;
+                                                  },
+                                                  controller: user,
+                                                  decoration: const InputDecoration(
+                                                    icon: Icon(Icons.home),
+                                                    labelText: 'Your Name',
+                                                  ),
+                                                ),
+                                                TextField(
+                                                  onChanged: (text){
+                                                    description = text;
+                                                  },
+                                                  controller: desc,
+                                                  decoration: const InputDecoration(
+                                                    icon: Icon(Icons.waves),
+                                                    labelText: 'Description',
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            CupertinoDialogAction(
+                                                child: const Text("Sign Up"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                  widget.bloc!.add(SignUpProfile(name, pass, userName, description));
+                                                }),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   }),
                             ],
                           );

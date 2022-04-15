@@ -1,14 +1,17 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tiktok/service/cache_manager.dart';
 import 'package:flutter_tiktok/ui/home/home.dart';
 import 'package:flutter_tiktok/ui/splash_screen.dart';
+import 'package:flutter_tiktok/ui/upload/upload_page.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await CacheManager.instance.init();
   HttpOverrides.global = MyHttpOverrides();
+  cameras = await availableCameras();
   runApp(const MyApp());
 }
 

@@ -45,6 +45,10 @@ dependencies:
   youtube_player_flutter: ^8.0.0
   shared_preferences: ^2.0.12
   pull_to_refresh: ^2.0.0
+  rxdart: ^0.27.3
+  get: ^4.6.1
+  flutter_share: ^2.0.0
+  camera: ^0.9.4+19
 
 dev_dependencies:
   flutter_test:

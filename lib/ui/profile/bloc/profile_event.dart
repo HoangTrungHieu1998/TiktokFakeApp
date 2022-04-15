@@ -44,8 +44,9 @@ class LoginProfile extends ProfileEvent{
         }else{
           yield ProfileUpdateFailed(result.error);
         }
+      }else{
+        yield ProfileUpdateFailed("You are not enter value");
       }
-      yield ProfileUpdateFailed("You are not enter value");
     }catch (_) {
       yield ProfileUpdateFailed("Api is not response");
     }
@@ -73,6 +74,30 @@ class SignUpProfile extends ProfileEvent{
       }
     }catch (_) {
       yield ProfileSignUpFailed("Update Failed");
+    }
+  }
+
+}
+
+class EditProfile extends ProfileEvent{
+  final int? id;
+  final String? loginName;
+  final String? userName;
+
+  EditProfile(this.id,this.loginName,this.userName);
+
+  @override
+  Stream<ProfileState> applyAsync({ProfileState? state, ProfileBloc? bloc}) async*{
+    try{
+      yield ProfileEditLoading();
+      final result = await HomeService.instance.editProfile(loginName: loginName,userName: userName,id: id);
+      if(result.access!){
+        yield ProfileEditSuccess(id: id);
+      }else{
+        yield ProfileEditFailed(result.error);
+      }
+    }catch (_) {
+      yield ProfileEditFailed("Update Failed");
     }
   }
 

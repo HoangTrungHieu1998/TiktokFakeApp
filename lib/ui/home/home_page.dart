@@ -7,6 +7,7 @@ import 'package:flutter_tiktok/ui/home/home_bloc.dart';
 import 'package:flutter_tiktok/ultils/color.dart';
 import 'package:flutter_tiktok/ultils/img.dart';
 import 'package:flutter_tiktok/ultils/size.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../model/User.dart';
@@ -145,6 +146,7 @@ class _VideoPlayerState extends State<VideoPlayerItem> {
                                 songName: widget.user!.songName,
                             ),
                             RightHome(
+                                vidID: widget.user!.id,
                                 size: widget.size,
                                 albumImg: widget.user!.image,
                                 comment: widget.user!.comment,
@@ -173,12 +175,14 @@ class RightHome extends StatelessWidget {
   final int? comment;
   final int? share;
   final String? albumImg;
-  const RightHome({
+  final int? vidID;
+  RightHome({
     Key? key,
-    required this.size, this.profileImg, this.like, this.comment, this.share, this.albumImg,
+    required this.size, this.profileImg, this.like, this.comment, this.share, this.albumImg,this.vidID
   }) : super(key: key);
 
   final Size size;
+  RxBool checkLike = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -195,9 +199,9 @@ class RightHome extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     getProfile(profileImg),
-                    getIcons(TikTokIcons.heart, like.toString(), 35.0),
-                    getIcons(TikTokIcons.chat_bubble, comment.toString(), 35.0),
-                    getIcons(TikTokIcons.reply, share.toString(), 30.0),
+                    getLikes(TikTokIcons.heart, like, 35.0,checkLike,vidID!,context),
+                    getComments(TikTokIcons.chat_bubble, comment.toString(), 35.0,() {}),
+                    getShare(TikTokIcons.reply, share.toString(), 30.0),
                     getAlbum(albumImg)
                   ],
                 ))

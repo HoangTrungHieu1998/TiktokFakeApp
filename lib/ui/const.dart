@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
+import 'package:flutter_tiktok/model/Result.dart';
+import 'package:flutter_tiktok/service/home_service.dart';
 import 'package:flutter_tiktok/ultils/color.dart';
+import 'package:flutter_tiktok/ultils/dialog.dart';
+import 'package:get/get.dart';
+
+import '../service/cache_manager.dart';
 
 Widget getAlbum(albumImg) {
   return SizedBox(
@@ -29,10 +36,53 @@ Widget getAlbum(albumImg) {
   );
 }
 
-Widget getIcons(icon, count, size) {
+Widget getLikes(icon, count, size, RxBool like,int vidID,BuildContext context) {
+  return Obx((){
+    return Column(
+      children: [
+        InkWell(
+            onTap: () async {
+              var cusID = CacheManager.instance.get('login', 0);
+              Results result = await HomeService.instance.addLike(cusId: cusID,vidId: vidID);
+              if(result.access!){
+                like.value = !like.value;
+                count +=1;
+              }else{
+                Results results = await HomeService.instance.disLike(cusId: cusID,vidId: vidID);
+                if(results.access!){
+                  like.value = !like.value;
+                  count -=1;
+                }else{
+                  MyDialog.instance.dialogOK(context, "Can't like", "");
+                }
+              }
+              // like.value = !like.value;
+              // if(like.value){
+              //   count +=1;
+              // }else{
+              //   count -=1;
+              // }
+              print("LIKE: $like");
+            },
+            child: Icon(icon, color: !like.value?ConstColor.white:Colors.pink, size: size)),
+        const SizedBox(
+          height: 5,
+        ),
+        Text(
+          count.toString(),
+          style: const TextStyle(
+              color: ConstColor.white, fontSize: 12, fontWeight: FontWeight.w700),
+        ),
+      ],
+    );
+  });
+}
+Widget getComments(icon, count, size, Function? onTap,) {
   return Column(
     children: [
-      Icon(icon, color: ConstColor.white, size: size),
+      InkWell(
+          onTap: ()=>onTap,
+          child: Icon(icon, color: ConstColor.white, size: size)),
       const SizedBox(
         height: 5,
       ),
@@ -40,7 +90,31 @@ Widget getIcons(icon, count, size) {
         count,
         style: const TextStyle(
             color: ConstColor.white, fontSize: 12, fontWeight: FontWeight.w700),
-      )
+      ),
+    ],
+  );
+}
+Widget getShare(icon, count, size) {
+  return Column(
+    children: [
+      InkWell(
+          onTap: ()async{
+            await FlutterShare.share(
+                title: 'Tiktok share',
+                text: 'Example share text',
+                linkUrl: 'https://www.facebook.com/',
+                chooserTitle: 'Example Chooser Title'
+            );
+          },
+          child: Icon(icon, color: ConstColor.white, size: size)),
+      const SizedBox(
+        height: 5,
+      ),
+      Text(
+        count,
+        style: const TextStyle(
+            color: ConstColor.white, fontSize: 12, fontWeight: FontWeight.w700),
+      ),
     ],
   );
 }
@@ -76,7 +150,7 @@ Widget getProfile(img) {
                     color: ConstColor.white,
                     size: 15,
                   )),
-            ))
+            )),
       ],
     ),
   );

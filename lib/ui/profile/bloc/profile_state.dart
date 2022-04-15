@@ -50,3 +50,17 @@ class ProfileSignUpFailed extends ProfileState{
   final String? error;
   ProfileSignUpFailed(this.error):super([]);
 }
+
+class ProfileEditLoading extends ProfileState{
+  ProfileEditLoading():super([]);
+}
+
+class ProfileEditSuccess extends ProfileState{
+  final int? id;
+  ProfileEditSuccess({this.id}):super([]);
+}
+
+class ProfileEditFailed extends ProfileState{
+  final String? error;
+  ProfileEditFailed(this.error):super([]);
+}

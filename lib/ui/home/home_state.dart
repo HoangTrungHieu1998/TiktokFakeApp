@@ -27,4 +27,14 @@ class HomeSuccess extends HomeState{
   HomeSuccess(this.user) : super([user]);
 }
 
+class HomeLike extends HomeState{
+  HomeLike() : super([]);
+}
+class HomeLikeSuccess extends HomeState{
+  HomeLikeSuccess() : super([]);
+}
+class HomeLikeFailed extends HomeState{
+  HomeLikeFailed(): super([]);
+}
+
 

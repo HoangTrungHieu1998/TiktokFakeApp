@@ -5,6 +5,7 @@ import 'package:flutter_tiktok/ui/home/home_builder.dart';
 import 'package:flutter_tiktok/ui/home/home_page.dart';
 import 'package:flutter_tiktok/ui/profile/profile_builder.dart';
 import 'package:flutter_tiktok/ui/profile/profile_page.dart';
+import 'package:flutter_tiktok/ui/upload/upload_page.dart';
 import 'package:flutter_tiktok/ui/upload_icon.dart';
 import 'package:flutter_tiktok/ultils/color.dart';
 import 'package:flutter_tiktok/ultils/icon.dart';
@@ -41,13 +42,7 @@ class _HomeState extends State<Home> {
               fontWeight: FontWeight.bold
           ),),
         ),
-        Center(
-          child: Text("Upload",style: TextStyle(
-              color: ConstColor.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-          ),),
-        ),
+        const UploadPage(),
         Center(
           child: Text("All Activity",style: TextStyle(
               color: ConstColor.black,
